@@ -10,7 +10,5 @@ def isSorted[A](as : Array[A], lt: (A,A) => Boolean) = {
   loop(0, as)
 }
 
-def pipa(chuj: String): String = chuj
-
 isSorted(Array(2,3,1), (a:Int,b:Int) => a < b)
 isSorted(Array(1,2,3), (a:Int,b:Int) => a < b)
