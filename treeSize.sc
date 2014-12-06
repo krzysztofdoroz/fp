@@ -24,8 +24,17 @@ def depth[A](t : Tree[A]) : Int = {
   }
 }
 
+def map[A,B](t : Tree[A], f : A => B) : Tree[B] = {
+   t match {
+     case Leaf(x) => Leaf(f(x))
+     case Branch(l,r) => Branch(map(l, f), map(r, f))
+   }
+}
+
+
 
 val tree = Branch(Branch(Leaf(2),Leaf(3)), Leaf(4))
 size(tree)
 maximum(tree)
 depth(tree)
+map(tree, (a : Int) => a + 1)
