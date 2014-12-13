@@ -29,6 +29,17 @@ sealed trait Option[+A] {
 case class Some[+A](get : A) extends Option[A]
 case object None extends Option[Nothing]
 
+def map2[A,B,C](a : Option[A], b : Option[B])(f : (A,B) => C) : Option[C] = {
+  (a,b) match {
+    case (None,_) | (_, None) => None
+    case (Some(x), Some(y)) => Some(f(x,y))
+  }
+}
+
+def traverse[A,B](a : List[A])(f : A => Option[B]): Option[List[B]] = {
+  a.foldRight[Option[List[B]]](Some(Nil))((a, acc) => map2(f(a), acc)( ( _ :: _ )  ))
+}
+
 // tests:
 val opt = Some(5)
 val opt2 = None
