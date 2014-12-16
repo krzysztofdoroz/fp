@@ -49,6 +49,7 @@ sealed trait Stream[+A] {
     loop(this, n)
   }
 
+  //imp
   def foldRight[B](z : => B)(f : (A, => B) => B) : B = {
     this match {
       case Cons(h,t) => f(h(), t().foldRight(z)(f))
@@ -101,6 +102,7 @@ sealed trait Stream[+A] {
     gen(0,1)
   }
 
+  //imp
   def unfold[A,S](z : S)(f: S => Option[(A,S)]) : Stream[A] = {
     f(z) match {
       case None => Empty : Stream[A]
@@ -108,7 +110,11 @@ sealed trait Stream[+A] {
     }
   }
 
-}
+  def fib2(): Stream[Int] = {
+    unfold((0,1)){case (a : Int,b : Int) => Some((a,(b, a + b)))}
+  }
+
+  }
 case object Empty extends Stream[Nothing]
 case class Cons[+A](h: () => A, t: () => Stream[A]) extends Stream[A]
 
