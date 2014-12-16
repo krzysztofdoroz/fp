@@ -101,6 +101,13 @@ sealed trait Stream[+A] {
     gen(0,1)
   }
 
+  def unfold[A,S](z : S)(f: S => Option[(A,S)]) : Stream[A] = {
+    f(z) match {
+      case None => Empty : Stream[A]
+      case Some((a,s)) => Stream.cons(a, unfold(s)(f))
+    }
+  }
+
 }
 case object Empty extends Stream[Nothing]
 case class Cons[+A](h: () => A, t: () => Stream[A]) extends Stream[A]
