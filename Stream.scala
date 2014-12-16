@@ -73,15 +73,32 @@ sealed trait Stream[+A] {
   }
 
   def filter(p : A => Boolean) : Stream[A] = {
-    foldRight(Empty[A] : Stream[A])((a,acc) => if(p(a)) Stream.cons(a, acc) else acc)
+    foldRight(Empty : Stream[A])((a,acc) => if(p(a)) Stream.cons(a, acc) else acc)
   }
 
-  def append(s : => Stream[A]) : Stream[A] = {
+  def append[B >:A](s : => Stream[B]) : Stream[B] = {
     foldRight(s)((a, acc) => Stream.cons(a,acc))
   }
 
   def flatMap[B](f : A => Stream[B]) : Stream[B] = {
-    foldRight(Empty[B] : Stream[B])((a, acc) => f(a) append acc)
+    foldRight(Empty : Stream[B])((a, acc) => f(a) append acc)
+  }
+
+  def constant[A](a : A) : Stream[A] = {
+     Stream.cons(a, constant(a))
+  }
+
+  def from(n : Int) : Stream[Int] = {
+    Stream.cons(n, from(n + 1))
+  }
+
+  def fib(): Stream[Int] = {
+
+    def gen(a : Int, b : Int): Stream[Int] = {
+      Stream.cons(a, gen(b, a + b))
+    }
+
+    gen(0,1)
   }
 
 }
