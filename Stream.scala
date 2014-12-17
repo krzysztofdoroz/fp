@@ -114,7 +114,26 @@ sealed trait Stream[+A] {
     unfold((0,1)){case (a : Int,b : Int) => Some((a,(b, a + b)))}
   }
 
+  def from2(n : Int) : Stream[Int] = {
+    unfold(n)((a : Int) => Some((a, a + 1)))
   }
+
+  def constant2[A](a : A) : Stream[A] = {
+    unfold(a)((a : A) => Some((a,a)))
+  }
+
+  def ones2() : Stream[Int] = {
+    unfold(1)(_ => Some((1,1)))
+  }
+
+  def mapViaUnfold[B](f : A => B) : Stream[B] = {
+    unfold(this){
+      case Cons(h,t) => Some((f(h()), t()))
+      case Empty => None
+    }
+  }
+
+}
 case object Empty extends Stream[Nothing]
 case class Cons[+A](h: () => A, t: () => Stream[A]) extends Stream[A]
 
