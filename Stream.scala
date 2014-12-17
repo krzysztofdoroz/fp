@@ -133,6 +133,14 @@ sealed trait Stream[+A] {
     }
   }
 
+  def takeViaUnfold(n : Int) : Stream[A] = {
+    unfold((this,n)) {
+      case (_, 0) => None
+      case (Cons(h,t), n) => Some((h(), (t(), n - 1)))
+      case (Empty,n) => None
+    }
+  }
+
 }
 case object Empty extends Stream[Nothing]
 case class Cons[+A](h: () => A, t: () => Stream[A]) extends Stream[A]
