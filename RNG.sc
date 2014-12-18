@@ -48,6 +48,10 @@ def map[A,B](s : Rand[A])(f: A => B): Rand[B] = {
   }
 }
 
+def mapViaFlatMap[A,B](s : Rand[A])(f: A => B): Rand[B] = {
+  flatMap(s)(a => unit(f(a)))
+}
+
 def double: Rand[Double] = {
   map(RNG.nonNegativeInt)( _ / (Int.MaxValue.toDouble + 1))
 }
