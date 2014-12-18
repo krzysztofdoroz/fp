@@ -66,6 +66,13 @@ def map2[A,B,C](ra : Rand[A], rb : Rand[B])(f : (A,B) => C) : Rand[C] = {
   }
 }
 
+def flatMap[A,B](f : Rand[A])(g : A => Rand[B]) : Rand[B] = {
+   rng => {
+     val (v, rng2) = f(rng)
+     g(v)(rng2)
+   }
+}
+
 def sequence[A](fs: List[Rand[A]]): Rand[List[A]] = {
   rnd => {
     val (l, r) = fs.foldLeft[(List[A], RNG)]((List[A](),rnd)) ((acc, a) => (a(acc._2)._1 :: acc._1, a(acc._2)._2))
